@@ -1,11 +1,16 @@
 package ru.romanovAl.tochkatest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -18,6 +23,9 @@ import ru.romanovAl.tochkatest.Api.GithubRxApi;
 import ru.romanovAl.tochkatest.adapter.PostAdapter;
 import ru.romanovAl.tochkatest.model.CustomAlertDialog;
 import ru.romanovAl.tochkatest.model.Item;
+import ru.romanovAl.tochkatest.model.autoLoadingRecyclerStuff.PaginationScrollListener;
+
+import static ru.romanovAl.tochkatest.model.autoLoadingRecyclerStuff.PaginationScrollListener.PAGE_START;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
+    private TextView helloTextView;
+    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private ConstraintLayout mainLayout;
+
+    private PostAdapter postAdapter;
+    private int currentPage = PAGE_START;
+    private boolean isLastPage = false;
+    private int totalPage = 10;
+    private boolean isLoading = false;
+    int itemCount = 0;
 
 
     @Override
@@ -34,8 +54,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainLayout = findViewById(R.id.mainLayout);
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recycler);
+        helloTextView = findViewById(R.id.hello_textView);
+        progressBar = findViewById(R.id.progressBar);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+
+        progressBar.setVisibility(View.INVISIBLE);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },1000);
+            }
+        });
 
         githubRxApi = new GithubRxApi();
 
@@ -76,37 +114,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView.addOnScrollListener(new PaginationScrollListener() {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage++;
+                //doApiCall
+            }
 
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
 
-
-
-//        githubRxApi.getUser("tom")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<Item>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Item item) {
-//                        currentItem = item;
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        PostAdapter postAdapter = new PostAdapter(MainActivity.this,currentItem.getItems());
-//                        recyclerView.setAdapter(postAdapter);
-//                    }
-//                });
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
 
     }
+
+    private String userName;
 
     private void doSearch(String userName){
         githubRxApi.getUser(userName)
@@ -115,7 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Observer<Item>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        helloTextView.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -125,16 +155,31 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        helloTextView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
 
+                        Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onComplete() {
-                        PostAdapter postAdapter = new PostAdapter(MainActivity.this,currentItem.getItems());
+                        postAdapter = new PostAdapter(MainActivity.this,currentItem.getItems());
                         recyclerView.setAdapter(postAdapter);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
 
                     }
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        if(recyclerView.getVisibility() == View.VISIBLE){
+            recyclerView.setVisibility(View.INVISIBLE);
+            helloTextView.setVisibility(View.VISIBLE);
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
 }

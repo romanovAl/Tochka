@@ -16,8 +16,6 @@ public class CustomAlertDialog extends AlertDialog {
 
     private EditText editTextSearch;
 
-
-
     public CustomAlertDialog(@NonNull Context context) {
         super(context);
 

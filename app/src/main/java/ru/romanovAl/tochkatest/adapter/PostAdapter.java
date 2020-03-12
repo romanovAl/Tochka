@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -13,13 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
-import retrofit2.http.Url;
 import ru.romanovAl.tochkatest.R;
 import ru.romanovAl.tochkatest.model.User;
 
@@ -39,6 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.post_layout, parent, false);
 
+
         return new PostViewHolder(view);
     }
 
@@ -49,8 +47,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
         holder.name.setText(currentUser.getLogin());
         holder.id.setText("id - " + currentUser.getId());
-        holder.link.setText("Перейти на страницу");
-        holder.link.setOnClickListener(new View.OnClickListener() {
+
+        TextView linkText = holder.link;
+        linkText.setText("Перейти на страницу");
+        linkText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri address = Uri.parse(currentUser.getHtmlUrl());
@@ -59,8 +59,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                 view.getContext().startActivity(browser);
             }
         });
-        holder.link.setTag(holder.link.getKeyListener());
-        holder.link.setKeyListener(null);
+        linkText.setTag(holder.link.getKeyListener());
+        linkText.setKeyListener(null);
+
         holder.score.setText("Рейтинг - " + currentUser.getScore());
 
         Picasso
@@ -68,7 +69,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
                 .load(userList.get(position).getAvatarUrl())
                 .resize(400,400)
                 .centerCrop()
-                .error(R.drawable.ic_launcher_background)
+                .error(R.drawable.error_avatar)
+                .placeholder(R.drawable.download)
                 .into(holder.avatar);
 
     }
@@ -77,4 +79,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
     public int getItemCount() {
         return userList.size();
     }
+
+
 }
