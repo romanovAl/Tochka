@@ -16,6 +16,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.romanovAl.tochkatest.Api.GithubRxApi;
 import ru.romanovAl.tochkatest.adapter.PostAdapter;
+import ru.romanovAl.tochkatest.model.CustomAlertDialog;
 import ru.romanovAl.tochkatest.model.Item;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,19 +37,79 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recycler);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "kek!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        githubRxApi = new GithubRxApi();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        githubRxApi = new GithubRxApi();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final CustomAlertDialog customAlertDialog = new CustomAlertDialog(MainActivity.this);
 
-        githubRxApi.getUser("tom")
+
+                customAlertDialog.setCancelable(true);
+                customAlertDialog.show();
+
+                customAlertDialog.setButtonSearchOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        doSearch(customAlertDialog.getEditTextSearchText());
+
+                        customAlertDialog.dismiss();
+                    }
+                });
+
+                customAlertDialog.setButtonCancelOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        customAlertDialog.dismiss();
+                    }
+                });
+
+                customAlertDialog.setEditTextOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+            }
+        });
+
+
+
+
+
+//        githubRxApi.getUser("tom")
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<Item>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Item item) {
+//                        currentItem = item;
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        PostAdapter postAdapter = new PostAdapter(MainActivity.this,currentItem.getItems());
+//                        recyclerView.setAdapter(postAdapter);
+//                    }
+//                });
+
+    }
+
+    private void doSearch(String userName){
+        githubRxApi.getUser(userName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Item>() {
@@ -71,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete() {
                         PostAdapter postAdapter = new PostAdapter(MainActivity.this,currentItem.getItems());
                         recyclerView.setAdapter(postAdapter);
+
                     }
                 });
-
     }
 
 }
