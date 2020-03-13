@@ -27,4 +27,8 @@ public class GithubRxApi {
         return apiService.getUsers(userName);
     }
 
+    public Observable<Item> getUserWithPageParam(String userName, long pageNum){
+        return apiService.getUsersWithPageParam(userName,pageNum);
+    }
+
 }

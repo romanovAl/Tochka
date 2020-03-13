@@ -10,4 +10,7 @@ public interface ApiService {
     @GET("search/users")
     Observable<Item> getUsers(@Query("q") String user);
 
+    @GET("search/users")
+    Observable<Item> getUsersWithPageParam(@Query("q") String user,
+                                           @Query("page") long pageNum);
 }
