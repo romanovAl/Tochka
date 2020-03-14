@@ -23,9 +23,6 @@ public class GithubRxApi {
         apiService = retrofit.create(ApiService.class);
     }
 
-    public Observable<Item> getUser(String userName) {
-        return apiService.getUsers(userName);
-    }
 
     public Observable<Item> getUserWithPageParam(String userName, long pageNum){
         return apiService.getUsersWithPageParam(userName,pageNum);

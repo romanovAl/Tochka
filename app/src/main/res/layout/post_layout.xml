@@ -1,87 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+<layout>
+
+    <data>
+        <variable
+            name="user"
+            type="ru.romanovAl.tochkatest.model.User" />
+        <variable
+            name="handler"
+            type="ru.romanovAl.tochkatest.activity.MainActivity"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/post_main_layout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:cardCornerRadius="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/avatar_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars[3]" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
-            <TextView
-                android:id="@+id/name_TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/roboto_mono"
-                android:text="Логин - JayJonaJameson"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/avatar_imageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/avatar_imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:url = "@{user.avatarUrl}"
+                    app:errorImage = "@{@drawable/error_avatar}"
+                    />
 
-            <TextView
-                android:id="@+id/id_TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/roboto_mono_light"
-                android:text="id - 1839230948"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@id/name_TextView"
-                app:layout_constraintTop_toBottomOf="@id/name_TextView" />
+                <TextView
+                    android:id="@+id/name_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/roboto_mono"
+                    android:text="@{user.login}"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_imageView"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/link_TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:fontFamily="@font/roboto_mono"
-                android:text="ссылка на профиль"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/name_TextView"
-                app:layout_constraintTop_toBottomOf="@+id/id_TextView" />
+                <TextView
+                    android:id="@+id/id_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/roboto_mono_light"
+                    android:text="@{String.valueOf(user.id)}"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@id/name_TextView"
+                    app:layout_constraintTop_toBottomOf="@id/name_TextView" />
 
-            <TextView
-                android:id="@+id/score_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/roboto_mono"
-                android:text="рейтинг - 100"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/name_TextView"
-                app:layout_constraintTop_toBottomOf="@+id/link_TextView" />
+                <EditText
+                    android:id="@+id/link_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:fontFamily="@font/roboto_mono"
+                    android:inputType="text"
+                    android:text="ссылка на профиль"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/name_TextView"
+                    app:layout_constraintTop_toBottomOf="@+id/id_TextView" />
+
+                <TextView
+                    android:id="@+id/score_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/roboto_mono"
+                    android:text="@{String.valueOf(user.score)}"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/name_TextView"
+                    app:layout_constraintTop_toBottomOf="@+id/link_TextView" />
 
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
+

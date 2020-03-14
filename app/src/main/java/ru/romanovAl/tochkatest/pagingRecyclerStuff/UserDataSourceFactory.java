@@ -1,4 +1,4 @@
-package ru.romanovAl.tochkatest.model.pagingRecyclerStuff;
+package ru.romanovAl.tochkatest.pagingRecyclerStuff;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
@@ -9,11 +9,12 @@ public class UserDataSourceFactory extends DataSource.Factory<Long, User> {
 
     public MutableLiveData<UserDataSource> userDataSourceMutableLiveData = new MutableLiveData<>();
 
-
     @Override
     public DataSource<Long, User> create() {
         UserDataSource userDataSource = new UserDataSource();
         userDataSourceMutableLiveData.postValue(userDataSource);
         return userDataSource;
     }
+
+
 }

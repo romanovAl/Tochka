@@ -1,4 +1,4 @@
-package ru.romanovAl.tochkatest.model.pagingRecyclerStuff;
+package ru.romanovAl.tochkatest.pagingRecyclerStuff;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +13,8 @@ public class UserViewModel extends ViewModel {
 
     private LiveData<UserDataSource> liveDataSource;
 
+    private UserDataSource userDataSource = new UserDataSource();
+
     public UserViewModel() {
         init();
     }
@@ -20,10 +22,18 @@ public class UserViewModel extends ViewModel {
     private void init(){
         UserDataSourceFactory itemDataSourceFactory = new UserDataSourceFactory();
         liveDataSource = itemDataSourceFactory.userDataSourceMutableLiveData;
+
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(UserDataSource.PAGE_SIZE)
                 .build();
+
+
         userPagedList = new LivePagedListBuilder<>(itemDataSourceFactory, config).build();
+
+
     }
+
+
+
 }
